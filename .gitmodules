@@ -1,0 +1,3 @@
+[submodule "chrome"]
+	path = chrome
+	url = https://github.com/manilarome/blurredfox.git

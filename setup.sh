@@ -19,4 +19,8 @@ echo "Profile folder is $profile_folder"
 echo "Setting user preference"
 cat $DIR/user.js > $profile_folder/user.js
 
+echo "Setting theme"
+rm -rf $profile_folder/chrome
+cp -r $DIR/chrome $profile_folder/chrome
+
 echo "Done"
