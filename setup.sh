@@ -17,10 +17,11 @@ profile_folder=$(_get_profile)
 echo "Profile folder is $profile_folder"
 
 echo "Setting user preference"
-cat $DIR/user.js > $profile_folder/user.js
+curl -SL https://raw.githubusercontent.com/arkenfox/user.js/master/user.js -o $profile_folder/user.js
+cat $DIR/user.js >> $profile_folder/user.js
 
 echo "Setting theme"
 rm -rf $profile_folder/chrome
-cp -r $DIR/chrome $profile_folder/chrome
+ln -s $DIR/chrome $profile_folder/chrome
 
 echo "Done"
