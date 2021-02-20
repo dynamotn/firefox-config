@@ -30,4 +30,11 @@ ln -s $DIR/search.json $profile_folder/search.json.mozlz4
 echo "Restore containers"
 ln -s $DIR/containers.json $profile_folder/containers.json
 
+echo "Restore bookmarks"
+ln -s $DIR/sensitive/bookmarks $profile_folder/bookmarkbackups
+
+echo "Restore site preferences"
+ln -s $DIR/sensitive/site-prefs/permissions.sqlite $profile_folder/permissions.sqlite
+ln -s $DIR/sensitive/site-prefs/content-prefs.sqlite $profile_folder/content-prefs.sqlite
+
 echo "Done"

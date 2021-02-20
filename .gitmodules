@@ -1,3 +1,6 @@
 [submodule "chrome"]
 	path = chrome
 	url = https://github.com/manilarome/blurredfox.git
+[submodule "sensitive"]
+	path = sensitive
+	url = git@gitlab.com:dynamo-config/firefox-data.git
