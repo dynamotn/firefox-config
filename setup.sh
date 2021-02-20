@@ -24,4 +24,10 @@ echo "Setting theme"
 rm -rf $profile_folder/chrome
 ln -s $DIR/chrome $profile_folder/chrome
 
+echo "Restore search engines"
+ln -s $DIR/search.json $profile_folder/search.json.mozlz4
+
+echo "Restore containers"
+ln -s $DIR/containers.json $profile_folder/containers.json
+
 echo "Done"
