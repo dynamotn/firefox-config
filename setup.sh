@@ -49,7 +49,7 @@ echo "Setting theme"
 _link "$DIR/chrome" "$profile_folder/chrome"
 
 echo "Restore search engines"
-_link "$DIR/search.json" "$profile_folder/search.json.mozlz4"
+_link "$DIR/search.json.mozlz4" "$profile_folder/search.json.mozlz4"
 
 echo "Restore containers"
 _link "$DIR/containers.json" "$profile_folder/containers.json"
