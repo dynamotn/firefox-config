@@ -31,6 +31,15 @@ _link() {
   ln -sv "$1" "$2"
 }
 
+# Copy new config
+# $1: The source of config
+# $2: The destination
+_copy() {
+  if ! [[ -L "$1" ]]; then
+    cp "$1" "$2"
+  fi
+}
+
 _init() {
   if ! type firefox > /dev/null; then
     exit
@@ -73,15 +82,21 @@ _config() {
   sed "s#\$profile_folder#$profile_folder#" "$DIR/sensitive/extensions/extensions.json" > "$profile_folder/extensions.json"
 }
 
-_update_extensions() {
+_update() {
+  echo "Update search engines"
+  _copy "$profile_folder/search.json.mozlz4" "$DIR/search.json.mozlz4"
+
+  echo "Update containers"
+  _copy "$profile_folder/containers.json" "$DIR/containers.json"
+
   echo "Update list of extensions"
   sed "s#$profile_folder#\$profile_folder#" "$profile_folder/extensions.json" > "$DIR/sensitive/extensions/extensions.json"
 }
 
 while getopts "up:" arg; do
   case $arg in
-    u) # Update list of extensions
-      IS_UPDATE_EXTENSIONS=true
+    u) # Update components
+      IS_UPDATE=true
       ;;
     p) # Set profile name
       PROFILE_NAME=$OPTARG
@@ -92,8 +107,8 @@ while getopts "up:" arg; do
 done
 
 _init
-if [ "$IS_UPDATE_EXTENSIONS" = true ]; then
-  _update_extensions
+if [ "$IS_UPDATE" = true ]; then
+  _update
 else
   _config
 fi
