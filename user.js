@@ -53,10 +53,11 @@ user_pref("browser.search.region", "VN");
 /* Enable search in location bar */
 user_pref("keyword.enabled", true);
 
-// === PRIVACY & SECURITY
+// === PRIVACY & SECURITY ===
 // Password
 /* Disable saving passwords */
 user_pref("signon.rememberSignons", false);
+
 // History
 /* Set what items to clear on shutdown
  * [SETTING] Privacy & Security->History->Custom Settings->Clear history when Firefox closes->Settings */
@@ -71,6 +72,10 @@ user_pref("privacy.clearOnShutdown.siteSettings", false); // Site Preferences
 /* Enable browsing and download history
  * [SETTING] Privacy & Security->History->Custom Settings->Remember browsing and download history */
 user_pref("places.history.enabled", true);
+
+// Other
+/* Disable RFP letterboxing */
+user_pref("privacy.resistFingerprinting.letterboxing", false);
 
 // === THEME ===
 /* Enable customChrome.css */
