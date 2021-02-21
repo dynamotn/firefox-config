@@ -90,6 +90,10 @@ _update() {
   _copy "$profile_folder/containers.json" "$DIR/containers.json"
 
   echo "Update list of extensions"
+  _copy "$profile_folder/addons.json" "$DIR/sensitive/extensions/addons.json"
+  _copy "$profile_folder/addonStartup.json.lz4" "$DIR/sensitive/extensions/addonStartup.json.lz4"
+  _copy "$profile_folder/extension-preferences.json" "$DIR/sensitive/extensions/extension-preferences.json"
+  _copy "$profile_folder/extension-settings.json" "$DIR/sensitive/extensions/extension-settings.json"
   sed "s#$profile_folder#\$profile_folder#" "$profile_folder/extensions.json" > "$DIR/sensitive/extensions/extensions.json"
 }
 
