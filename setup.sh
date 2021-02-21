@@ -31,34 +31,70 @@ _link() {
   ln -sv "$1" "$2"
 }
 
-if ! type firefox > /dev/null; then
-  exit
+_init() {
+  if ! type firefox > /dev/null; then
+    exit
+  fi
+
+  if [ -z "$(_get_profile)" ]; then
+    firefox -CreateProfile $PROFILE_NAME
+  fi
+  profile_folder=$(_get_profile)
+  echo "Profile folder is $profile_folder"
+}
+
+_config() {
+  echo "Setting user preference"
+  curl -SL https://raw.githubusercontent.com/arkenfox/user.js/master/user.js -o "$profile_folder/user.js"
+  cat "$DIR/user.js" >> "$profile_folder/user.js"
+
+  echo "Setting theme"
+  _link "$DIR/chrome" "$profile_folder/chrome"
+
+  echo "Restore search engines"
+  _link "$DIR/search.json.mozlz4" "$profile_folder/search.json.mozlz4"
+
+  echo "Restore containers"
+  _link "$DIR/containers.json" "$profile_folder/containers.json"
+
+  echo "Restore bookmarks"
+  _link "$DIR/sensitive/bookmarks" "$profile_folder/bookmarkbackups"
+
+  echo "Restore site preferences"
+  _link "$DIR/sensitive/site-prefs/permissions.sqlite" "$profile_folder/permissions.sqlite"
+  _link "$DIR/sensitive/site-prefs/content-prefs.sqlite" "$profile_folder/content-prefs.sqlite"
+
+  echo "Restore addons"
+  _link "$DIR/sensitive/extensions/addons.json" "$profile_folder/addons.json"
+  _link "$DIR/sensitive/extensions/addonStartup.json.lz4" "$profile_folder/addonStartup.json.lz4"
+  _link "$DIR/sensitive/extensions/extension-preferences.json" "$profile_folder/extension-preferences.json"
+  _link "$DIR/sensitive/extensions/extension-settings.json" "$profile_folder/extension-settings.json"
+  _link "$DIR/sensitive/extensions/extensions" "$profile_folder/extensions"
+  sed "s#\$profile_folder#$profile_folder#" "$DIR/sensitive/extensions/extensions.json" > "$profile_folder/extensions.json"
+}
+
+_update_extensions() {
+  echo "Update list of extensions"
+  sed "s#$profile_folder#\$profile_folder#" "$profile_folder/extensions.json" > "$DIR/sensitive/extensions/extensions.json"
+}
+
+while getopts "up:" arg; do
+  case $arg in
+    u) # Update list of extensions
+      IS_UPDATE_EXTENSIONS=true
+      ;;
+    p) # Set profile name
+      PROFILE_NAME=$OPTARG
+      ;;
+    *)
+      ;;
+  esac
+done
+
+_init
+if [ "$IS_UPDATE_EXTENSIONS" = true ]; then
+  _update_extensions
+else
+  _config
 fi
-
-if [ -z "$(_get_profile)" ]; then
-  firefox -CreateProfile $PROFILE_NAME
-fi
-profile_folder=$(_get_profile)
-echo "Profile folder is $profile_folder"
-
-echo "Setting user preference"
-curl -SL https://raw.githubusercontent.com/arkenfox/user.js/master/user.js -o "$profile_folder/user.js"
-cat "$DIR/user.js" >> "$profile_folder/user.js"
-
-echo "Setting theme"
-_link "$DIR/chrome" "$profile_folder/chrome"
-
-echo "Restore search engines"
-_link "$DIR/search.json.mozlz4" "$profile_folder/search.json.mozlz4"
-
-echo "Restore containers"
-_link "$DIR/containers.json" "$profile_folder/containers.json"
-
-echo "Restore bookmarks"
-_link "$DIR/sensitive/bookmarks" "$profile_folder/bookmarkbackups"
-
-echo "Restore site preferences"
-_link "$DIR/sensitive/site-prefs/permissions.sqlite" "$profile_folder/permissions.sqlite"
-_link "$DIR/sensitive/site-prefs/content-prefs.sqlite" "$profile_folder/content-prefs.sqlite"
-
 echo "Done"
